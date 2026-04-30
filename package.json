@@ -1,0 +1,19 @@
+{
+  "name": "parisovennyc",
+  "version": "1.0.0",
+  "description": "Paris Oven Bakery - Long Island City, NY",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": ["bakery", "paris", "oven"],
+  "author": "Nacim Elrhoul",
+  "license": "MIT",
+  "engines": {
+    "node": "18.x"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
