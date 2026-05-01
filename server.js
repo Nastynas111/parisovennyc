@@ -11,46 +11,45 @@ app.use(express.static(path.join(__dirname), {
   etag: false
 }));
 
-// Read HTML once on startup
+// Load HTML
 const htmlPath = path.join(__dirname, 'index.html');
-let cachedHtml = null;
+let html = null;
 
 try {
-  cachedHtml = fs.readFileSync(htmlPath, 'utf-8');
-  console.log(`✓ Loaded index.html (${(cachedHtml.length / 1024 / 1024).toFixed(2)}MB)`);
+  html = fs.readFileSync(htmlPath, 'utf-8');
+  console.log(`✓ Loaded HTML (${(html.length / 1024).toFixed(0)}KB)`);
 } catch (err) {
-  console.error('ERROR loading index.html:', err.message);
+  console.error('FATAL: Could not load index.html', err.message);
   process.exit(1);
 }
 
 // Routes
 app.get('/', (req, res) => {
-  res.setHeader('Content-Type', 'text/html; charset=utf-8');
-  res.send(cachedHtml);
+  res.type('text/html').send(html);
 });
 
 app.get('*', (req, res) => {
-  res.setHeader('Content-Type', 'text/html; charset=utf-8');
-  res.send(cachedHtml);
+  res.type('text/html').send(html);
 });
 
-// Error handler
+// Error handling
 app.use((err, req, res, next) => {
-  console.error('Error:', err);
-  res.status(500).send('Internal Server Error');
+  console.error('[ERROR]', err.message);
+  res.status(500).type('text/plain').send('Server Error');
 });
 
-// Start server
+// Start
 const server = app.listen(port, '0.0.0.0', () => {
-  console.log(`✓ Paris Oven is live on port ${port}`);
-  console.log(`✓ http://localhost:${port}`);
+  console.log(`✓ Paris Oven live on 0.0.0.0:${port}`);
 });
 
 // Graceful shutdown
 process.on('SIGTERM', () => {
-  console.log('SIGTERM received, shutting down gracefully...');
-  server.close(() => {
-    console.log('Server closed');
-    process.exit(0);
-  });
+  console.log('SIGTERM - shutting down');
+  server.close(() => process.exit(0));
+});
+
+process.on('SIGINT', () => {
+  console.log('SIGINT - shutting down');
+  server.close(() => process.exit(0));
 });
