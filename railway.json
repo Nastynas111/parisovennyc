@@ -1,3 +1,13 @@
 {
-  "stubs": {}
+  "stubs": {},
+  "domains": [
+    {
+      "domain": "parisovennyc.com",
+      "service": "parisovennyc"
+    },
+    {
+      "domain": "www.parisovennyc.com",
+      "service": "parisovennyc"
+    }
+  ]
 }
